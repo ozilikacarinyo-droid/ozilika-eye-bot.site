@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ozilika Eye AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #07111f;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+header {
+    padding: 22px 18px;
+    background: #0b1728;
+    border-bottom: 1px solid #1b3048;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #19d3ae;
+}
+
+.subtitle {
+    color: #8fa4ba;
+    margin-top: 6px;
+    font-size: 13px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 18px;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+select, button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #29435e;
+    background: #0d1d30;
+    color: white;
+    font-size: 15px;
+}
+
+button {
+    background: #19d3ae;
+    color: #061019;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.card {
+    background: #0b1728;
+    border: 1px solid #1b3048;
+    border-radius: 15px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.card h2 {
+    font-size: 17px;
+    margin-bottom: 14px;
+}
+
+.signal {
+    text-align: center;
+    padding: 25px 10px;
+}
+
+.signal-label {
+    color: #8fa4ba;
+    font-size: 13px;
+}
+
+.signal-value {
+    font-size: 38px;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.wait {
+    color: #ffd166;
+}
+
+.buy {
+    color: #19d3ae;
+}
+
+.sell {
+    color: #ff6b6b;
+}
+
+.score {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.progress {
+    height: 10px;
+    background: #17283b;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #19d3ae;
+    transition: width 0.5s;
+}
+
+.indicators {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.indicator {
+    background: #0e2034;
+    padding: 14px;
+    border-radius: 10px;
+}
+
+.indicator-name {
+    color: #8fa4ba;
+    font-size: 12px;
+}
+
+.indicator-value {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.analysis {
+    color: #c5d2df;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.warning {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 9px;
+    background: #241f0d;
+    color: #ffd166;
+    font-size: 13px;
+}
+
+footer {
+    text-align: center;
+    color: #60768d;
+    padding: 25px;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">OZILIKA <span>EYE AI</span></div>
+    <div class="subtitle">
+        Multi-Market Trading Intelligence & Analysis
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="controls">
+
+        <select id="asset">
+            <option>EUR/USD</option>
+            <option>GBP/USD</option>
+            <option>USD/JPY</option>
+            <option>USD/CAD</option>
+            <option>AUD/USD</option>
+            <option>BTC/USD</option>
+            <option>ETH/USD</option>
+            <option>GOLD</option>
+        </select>
+
+        <select id="timeframe">
+            <option>1 Minute</option>
+            <option>5 Minutes</option>
+            <option>15 Minutes</option>
+            <option>1 Hour</option>
+            <option>4 Hours</option>
+            <option>1 Day</option>
+        </select>
+
+    </div>
+
+    <button onclick="scanMarket()">🔍 SCAN MARKET</button>
+
+    <div class="card signal">
+
+        <div class="signal-label">CURRENT ANALYSIS</div>
+
+        <div id="signal" class="signal-value wait">
+            WAIT
+        </div>
+
+        <div>
+            Confluence Score:
+            <span id="score" class="score">0/100</span>
+        </div>
+
+        <div class="progress">
+            <div id="progress" class="progress-bar"></div>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>📊 Technical Scanner</h2>
+
+        <div class="indicators">
+
+            <div class="indicator">
+                <div class="indicator-name">EMA 20 / 50</div>
+                <div id="ema" class="indicator-value">Waiting...</div>
+            </div>
+
+            <div class="indicator">
+                <div class="indicator-name">RSI 14</div>
+                <div id="rsi" class="indicator-value">Waiting...</div>
+            </div>
+
+            <div class="indicator">
+                <div class="indicator-name">MACD 12/26/9</div>
+                <div id="macd" class="indicator-value">Waiting...</div>
+            </div>
+
+            <div class="indicator">
+                <div class="indicator-name">Stochastic 5/3/3</div>
+                <div id="stoch" class="indicator-value">Waiting...</div>
+            </div>
+
+            <div class="indicator">
+                <div class="indicator-name">Market Structure</div>
+                <div id="structure" class="indicator-value">Waiting...</div>
+            </div>
+
+            <div class="indicator">
+                <div class="indicator-name">Support / Resistance</div>
+                <div id="sr" class="indicator-value">Waiting...</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>🤖 AI Market Analysis</h2>
+
+        <div id="analysis" class="analysis">
+            Select an asset and timeframe, then press SCAN MARKET.
+        </div>
+
+        <div class="warning">
+            ⚠️ This is an analysis tool, not a guarantee of profit.
+            Markets can move unexpectedly. Always test a strategy before risking real money.
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    OZILIKA EYE AI • Multi-Market Trading Intelligence
+</footer>
+
+<script>
+
+function scanMarket() {
+
+    const asset = document.getElementById("asset").value;
+    const timeframe = document.getElementById("timeframe").value;
+
+    /*
+      TEMPORARY DEMO ENGINE
+
+      Later this will be replaced with:
+      - live market data
+      - real candles
+      - EMA calculations
+      - RSI calculations
+      - MACD calculations
+      - Stochastic calculations
+      - market structure
+      - support/resistance
+      - backtesting
+      - AI analysis
+    */
+
+    const emaBull = Math.random() > 0.4;
+    const macdBull = Math.random() > 0.45;
+    const structureBull = Math.random() > 0.5;
+
+    const rsi = Math.floor(40 + Math.random() * 35);
+    const stoch = Math.floor(25 + Math.random() * 55);
+
+    let score = 50;
+
+    if (emaBull) score += 15;
+    else score -= 15;
+
+    if (macdBull) score += 15;
+    else score -= 15;
+
+    if (structureBull) score += 10;
+    else score -= 10;
+
+    if (rsi > 50) score += 5;
+    else score -= 5;
+
+    score = Math.max(0, Math.min(100, score));
+
+    let signal = "WAIT";
+    let signalClass = "wait";
+
+    if (score >= 75) {
+        signal = "BUY";
+        signalClass = "buy";
+    } else if (score <= 30) {
+        signal = "SELL";
+        signalClass = "sell";
+    }
+
+    document.getElementById("signal").textContent = signal;
+
+    document.getElementById("signal").className =
+        "signal-value " + signalClass;
+
+    document.getElementById("score").textContent =
+        score + "/100";
+
+    document.getElementById("progress").style.width =
+        score + "%";
+
+    document.getElementById("ema").textContent =
+        emaBull ? "Bullish ↑" : "Bearish ↓";
+
+    document.getElementById("rsi").textContent =
+        rsi;
+
+    document.getElementById("macd").textContent =
+        macdBull ? "Bullish ↑" : "Bearish ↓";
+
+    document.getElementById("stoch").textContent =
+        stoch;
+
+    document.getElementById("structure").textContent =
+        structureBull ? "Higher High / Higher Low" :
+        "Lower High / Lower Low";
+
+    document.getElementById("sr").textContent =
+        score > 60 ? "Support holding" :
+        "Resistance / weak structure";
+
+    document.getElementById("analysis").innerHTML =
+        "<strong>" + asset + " — " + timeframe + "</strong><br><br>" +
+
+        "The preliminary scanner currently shows a " +
+        "<strong>" + signal + "</strong> bias with a confluence score of " +
+        "<strong>" + score + "/100</strong>.<br><br>" +
+
+        "EMA trend: " + (emaBull ? "bullish" : "bearish") + ".<br>" +
+
+        "RSI 14: " + rsi + ".<br>" +
+
+        "MACD: " + (macdBull ? "positive momentum" :
+        "negative momentum") + ".<br>" +
+
+        "Market structure: " +
+        (structureBull ? "bullish structure" :
+        "bearish structure") + ".<br><br>" +
+
+        "⚠️ This is currently a DEMO scanner. " +
+        "It does not use live market prices yet.";
+
+}
+
+</script>
+
+</body>
+</html>
