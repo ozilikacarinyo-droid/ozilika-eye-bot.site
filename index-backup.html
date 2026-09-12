@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ozilika Eye AI</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#07111f;
+ color:#f5f7fa;
+ min-height:100vh
+}
+header{
+ padding:20px;
+ background:#0b1728;
+ border-bottom:1px solid #26364d;
+ position:sticky;
+ top:0;
+ z-index:5
+}
+.logo{
+ font-size:24px;
+ font-weight:800;
+ letter-spacing:.5px
+}
+.sub{
+ color:#8ea4bf;
+ font-size:12px;
+ margin-top:5px
+}
+.container{
+ max-width:900px;
+ margin:auto;
+ padding:16px
+}
+.card{
+ background:#0d1b2e;
+ border:1px solid #26364d;
+ border-radius:16px;
+ padding:16px;
+ margin-bottom:14px;
+ box-shadow:0 8px 25px rgba(0,0,0,.18)
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px
+}
+label{
+ display:block;
+ color:#91a7c1;
+ font-size:12px;
+ margin-bottom:6px
+}
+select,button{
+ width:100%;
+ border:1px solid #334963;
+ border-radius:10px;
+ padding:13px;
+ font-size:15px
+}
+select{
+ background:#091625;
+ color:white
+}
+button{
+ background:#1769e0;
+ color:white;
+ font-weight:800;
+ cursor:pointer
+}
+button:active{transform:scale(.98)}
+.scan{
+ margin-top:14px;
+ font-size:17px;
+ padding:16px
+}
+.mode{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px
+}
+.mode button{
+ background:#101f33
+}
+.mode button.active{
+ background:#1769e0;
+ border-color:#4d96ff
+}
+.status{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px
+}
+.badge{
+ padding:7px 10px;
+ border-radius:20px;
+ font-size:11px;
+ font-weight:800;
+ background:#182b43;
+ color:#9db3ce
+}
+.badge.demo{color:#ffd66b}
+.badge.live{color:#ff8c8c}
+.signal{
+ text-align:center;
+ padding:22px
+}
+.signalWord{
+ font-size:40px;
+ font-weight:900;
+ margin:8px 0
+}
+.call{color:#36df91}
+.put{color:#ff6b7a}
+.wait{color:#ffd45c}
+.score{
+ font-size:30px;
+ font-weight:900
+}
+.meter{
+ height:10px;
+ background:#172a41;
+ border-radius:20px;
+ overflow:hidden;
+ margin:12px 0
+}
+.meter div{
+ height:100%;
+ width:0%;
+ background:#36df91;
+ transition:.5s
+}
+.stats{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:10px
+}
+.stat{
+ background:#091625;
+ padding:13px;
+ border-radius:12px
+}
+.stat b{
+ display:block;
+ font-size:17px;
+ margin-top:4px
+}
+.reason{
+ padding:9px 0;
+ border-bottom:1px solid #20334a;
+ color:#c8d5e5;
+ font-size:14px
+}
+.reason:last-child{border-bottom:0}
+.history{
+ max-height:300px;
+ overflow:auto
+}
+.row{
+ display:grid;
+ grid-template-columns:1.2fr .8fr .7fr .7fr;
+ gap:5px;
+ padding:10px 4px;
+ border-bottom:1px solid #20334a;
+ font-size:12px
+}
+.small{
+ color:#8fa6c0;
+ font-size:11px
+}
+.good{color:#36df91}
+.bad{color:#ff6b7a}
+.warning{
+ background:#2a2110;
+ border:1px solid #665020;
+ color:#f5d88a;
+ padding:12px;
+ border-radius:12px;
+ font-size:12px;
+ line-height:1.5
+}
+.footer{
+ text-align:center;
+ color:#71869e;
+ font-size:11px;
+ padding:20px
+}
+@media(max-width:600px){
+ .grid{grid-template-columns:1fr}
+ .row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">👁️ OZILIKA EYE AI</div>
+ <div class="sub">Multi-market technical analysis & signal laboratory</div>
+</header>
+
+<div class="container">
+
+<div class="card">
+ <div class="status">
+  <div>
+   <b>ENGINE STATUS</b>
+   <div class="small">Analysis engine ready</div>
+  </div>
+  <span id="status" class="badge demo">DEMO MODE</span>
+ </div>
+</div>
+
+<div class="card">
+ <h3>Market Configuration</h3>
+
+ <div class="grid">
+
+  <div>
+   <label>PLATFORM / DATA SOURCE</label>
+   <select id="platform">
+    <option>Deriv</option>
+    <option>Forex</option>
+    <option>Pocket Option</option>
+   </select>
+  </div>
+
+  <div>
+   <label>ACCOUNT MODE</label>
+   <select id="account">
+    <option value="demo">Demo / Paper</option>
+    <option value="live">Live Analysis</option>
+   </select>
+  </div>
+
+  <div>
+   <label>ANALYSIS TYPE</label>
+   <select id="type">
+    <option value="binary">Binary Direction</option>
+    <option value="digits">Digits / Over-Under</option>
+    <option value="forex">Forex</option>
+   </select>
+  </div>
+
+  <div>
+   <label>ASSET</label>
+   <select id="asset">
+    <option>Volatility 100</option>
+    <option>Volatility 75</option>
+    <option>Volatility 50</option>
+    <option>EUR/USD</option>
+    <option>GBP/USD</option>
+    <option>USD/JPY</option>
+    <option>XAU/USD</option>
+    <option>BTC/USD</option>
+   </select>
+  </div>
+
+  <div>
+   <label>TIMEFRAME</label>
+   <select id="timeframe">
+    <option>1 minute</option>
+    <option>2 minutes</option>
+    <option>5 minutes</option>
+    <option>15 minutes</option>
+   </select>
+  </div>
+
+  <div>
+   <label>EXPIRY / TEST WINDOW</label>
+   <select id="expiry">
+    <option>1 minute</option>
+    <option>2 minutes</option>
+    <option>3 minutes</option>
+    <option>5 minutes</option>
+   </select>
+  </div>
+
+ </div>
+
+ <button class="scan" onclick="scanMarket()">🔎 RUN OZILIKA AI SCAN</button>
+</div>
+
+<div class="warning">
+ <b>⚠️ TESTING MODE</b><br>
+ This first version uses simulated market data. It is for testing the
+ interface and analysis logic. It does not connect to a broker,
+ execute trades, or guarantee profitable signals.
+</div>
+
+<div class="card signal">
+ <div class="small">AI DECISION</div>
+ <div id="signal" class="signalWord wait">WAIT</div>
+ <div id="signalText">Run a scan to analyze the market.</div>
+
+ <div style="margin-top:15px">
+  <div class="small">CONFIDENCE / SIGNAL STRENGTH</div>
+  <div id="score" class="score">--/100</div>
+  <div class="meter"><div id="meter"></div></div>
+ </div>
+</div>
+
+<div class="card">
+ <h3>📊 Technical Analysis</h3>
+
+ <div class="stats">
+
+  <div class="stat">
+   <span class="small">TREND</span>
+   <b id="trend">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">MOMENTUM</span>
+   <b id="momentum">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">EMA 20</span>
+   <b id="ema20">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">EMA 50</span>
+   <b id="ema50">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">RSI 14</span>
+   <b id="rsi">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">STOCHASTIC</span>
+   <b id="stoch">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">MACD</span>
+   <b id="macd">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">VOLATILITY</span>
+   <b id="atr">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">SUPPORT</span>
+   <b id="support">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">RESISTANCE</span>
+   <b id="resistance">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">CANDLE</span>
+   <b id="candle">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">MARKET STRUCTURE</span>
+   <b id="structure">--</b>
+  </div>
+
+ </div>
+</div>
+
+<div class="card">
+ <h3>🧠 Why Ozilika Eye AI Chose This</h3>
+ <div id="reasons">
+  <div class="reason">Waiting for scan...</div>
+ </div>
+</div>
+
+<div class="card">
+ <h3>🔢 Digits Analysis</h3>
+ <div class="stats">
+
+  <div class="stat">
+   <span class="small">LAST DIGIT</span>
+   <b id="digit">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">OVER 5</span>
+   <b id="over5">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">UNDER 5</span>
+   <b id="under5">--</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">EVEN / ODD</span>
+   <b id="evenodd">--</b>
+  </div>
+
+ </div>
+</div>
+
+<div class="card">
+ <h3>🧪 Paper / Demo Results</h3>
+
+ <div class="stats">
+
+  <div class="stat">
+   <span class="small">SIGNALS</span>
+   <b id="total">0</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">WINS</span>
+   <b id="wins" class="good">0</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">LOSSES</span>
+   <b id="losses" class="bad">0</b>
+  </div>
+
+  <div class="stat">
+   <span class="small">WIN RATE</span>
+   <b id="winrate">0%</b>
+  </div>
+
+ </div>
+</div>
+
+<div class="card">
+ <h3>📋 Signal History</h3>
+
+ <div class="row">
+  <b>Time</b>
+  <b>Asset</b>
+  <b>Signal</b>
+  <b>Score</b>
+ </div>
+
+ <div id="history" class="history">
+  <div class="small">No signals yet.</div>
+ </div>
+</div>
+
+<div class="footer">
+ Ozilika Eye AI • Analysis laboratory • No guaranteed-profit claims
+</div>
+
+</div>
+
+<script>
+
+let total=0;
+let wins=0;
+let losses=0;
+
+/* Random demo market generator.
+   THIS WILL LATER BE REPLACED WITH REAL MARKET DATA. */
+
+function random(min,max){
+ return Math.random()*(max-min)+min;
+}
+
+function round(n,d=2){
+ return Number(n).toFixed(d);
+}
+
+function scanMarket(){
+
+ const platform=document.getElementById("platform").value;
+ const type=document.getElementById("type").value;
+ const asset=document.getElementById("asset").value;
+ const timeframe=document.getElementById("timeframe").value;
+ const account=document.getElementById("account").value;
+
+ const status=document.getElementById("status");
+
+ if(account==="live"){
+   status.className="badge live";
+   status.textContent="LIVE ANALYSIS";
+ }else{
+   status.className="badge demo";
+   status.textContent="DEMO MODE";
+ }
+
+ /* Simulated indicator values */
+
+ let ema20=random(90,110);
+ let ema50=random(90,110);
+
+ let rsi=random(25,75);
+ let stoch=random(10,90);
+ let macd=random(-2,2);
+ let atr=random(.2,3);
+
+ let bullish=0;
+ let bearish=0;
+ let reasons=[];
+
+ if(ema20>ema50){
+   bullish++;
+   reasons.push("EMA 20 is above EMA 50.");
+ }else{
+   bearish++;
+   reasons.push("EMA 20 is below EMA 50.");
+ }
+
+ if(rsi>55){
+   bullish++;
+   reasons.push("RSI is above the midline, showing bullish momentum.");
+ }else if(rsi<45){
+   bearish++;
+   reasons.push("RSI is below the midline, showing bearish momentum.");
+ }else{
+   reasons.push("RSI is near the neutral zone.");
+ }
+
+ if(macd>0){
+   bullish++;
+   reasons.push("MACD momentum is positive.");
+ }else{
+   bearish++;
+   reasons.push("MACD momentum is negative.");
+ }
+
+ if(stoch>60){
+   bullish++;
+   reasons.push("Stochastic momentum favors buyers.");
+ }else if(stoch<40){
+   bearish++;
+   reasons.push("Stochastic momentum favors sellers.");
+ }else{
+   reasons.push("Stochastic is neutral.");
+ }
+
+ let candle;
+
+ if(Math.random()>.5){
+   candle="Bullish";
+   bullish++;
+   reasons.push("Latest simulated candle is bullish.");
+ }else{
+   candle="Bearish";
+   bearish++;
+   reasons.push("Latest simulated candle is bearish.");
+ }
+
+ let trend;
+
+ if(bullish>bearish) trend="Bullish";
+ else if(bearish>bullish) trend="Bearish";
+ else trend="Neutral";
+
+ let momentum;
+
+ if(Math.abs(macd)>1) momentum="Strong";
+ else if(Math.abs(macd)>.4) momentum="Moderate";
+ else momentum="Weak";
+
+ let signal="WAIT";
+
+ if(bullish>=4 && bullish>bearish+1){
+   signal="CALL";
+ }
+
+ if(bearish>=4 && bearish>bullish+1){
+   signal="PUT";
+ }
+
+ let score;
+
+ if(signal==="CALL"){
+   score=65+Math.floor(random(0,31));
+ }
+
+ else if(signal==="PUT"){
+   score=65+Math.floor(random(0,31));
+ }
+
+ else{
+   score=45+Math.floor(random(0,21));
+ }
+
+ let support=random(90,99);
+ let resistance=random(101,110);
+
+ let digit=Math.floor(random(0,10));
+
+ let over=((10-digit)/10)*100;
+ let under=(digit/10)*100;
+
+ let evenodd=digit%2===0?"EVEN":"ODD";
+
+ document.getElementById("trend").textContent=trend;
+ document.getElementById("momentum").textContent=momentum;
+ document.getElementById("ema20").textContent=round(ema20);
+ document.getElementById("ema50").textContent=round(ema50);
+ document.getElementById("rsi").textContent=round(rsi);
+ document.getElementById("stoch").textContent=round(stoch);
+ document.getElementById("macd").textContent=round(macd);
+ document.getElementById("atr").textContent=round(atr);
+ document.getElementById("support").textContent=round(support);
+ document.getElementById("resistance").textContent=round(resistance);
+ document.getElementById("candle").textContent=candle;
+ document.getElementById("structure").textContent=
+   trend==="Bullish"?"Higher High / Higher Low":
+   trend==="Bearish"?"Lower High / Lower Low":"Mixed";
+
+ document.getElementById("digit").textContent=digit;
+ document.getElementById("over5").textContent=round(over)+"%";
+ document.getElementById("under5").textContent=round(under)+"%";
+ document.getElementById("evenodd").textContent=evenodd;
+
+ let signalEl=document.getElementById("signal");
+
+ signalEl.className="signalWord";
+
+ if(signal==="CALL"){
+   signalEl.classList.add("call");
+   signalEl.textContent="🟢 CALL";
+ }
+
+ else if(signal==="PUT"){
+   signalEl.classList.add("put");
+   signalEl.textContent="🔴 PUT";
+ }
+
+ else{
+   signalEl.classList.add("wait");
+   signalEl.textContent="🟡 WAIT";
+ }
+
+ document.getElementById("score").textContent=score+"/100";
+ document.getElementById("meter").style.width=score+"%";
+
+ document.getElementById("signalText").textContent=
+   platform+" • "+asset+" • "+timeframe+" • "+type;
+
+ let reasonHTML="";
+
+ reasons.forEach(r=>{
+   reasonHTML+="<div class='reason'>✓ "+r+"</div>";
+ });
+
+ if(signal==="WAIT"){
+   reasonHTML+="<div class='reason'>⚠️ Confirmation is insufficient. Waiting is preferred over forcing a trade.</div>";
+ }else{
+   reasonHTML+="<div class='reason'>🎯 Multiple simulated factors are aligned, but this is not a guaranteed outcome.</div>";
+ }
+
+ document.getElementById("reasons").innerHTML=reasonHTML;
+
+ addHistory(asset,signal,score);
+
+}
+
+function addHistory(asset,signal,score){
+
+ total++;
+
+ document.getElementById("total").textContent=total;
+
+ let result="";
+
+ /* Paper result only.
+    We deliberately do NOT claim that a signal is guaranteed. */
+
+ if(signal!=="WAIT"){
+
+   if(Math.random()>.45){
+     wins++;
+     result="WIN";
+   }else{
+     losses++;
+     result="LOSS";
+   }
+
+ }
+
+ let rate=total>0?(wins/Math.max(1,wins+losses))*100:0;
+
+ document.getElementById("wins").textContent=wins;
+ document.getElementById("losses").textContent=losses;
+ document.getElementById("winrate").textContent=round(rate,1)+"%";
+
+ let time=new Date().toLocaleTimeString();
+
+ let history=document.getElementById("history");
+
+ if(history.innerText==="No signals yet."){
+   history.innerHTML="";
+ }
+
+ let row=document.createElement("div");
+ row.className="row";
+
+ row.innerHTML=
+   "<span>"+time+"</span>"+
+   "<span>"+asset+"</span>"+
+   "<span>"+signal+"</span>"+
+   "<span>"+score+"</span>";
+
+ history.prepend(row);
+
+}
+
+</script>
+
+</body>
+    </html>
