@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ozilika Eye AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="top">
+  <div>
+    <h1>👁️ OZILIKA EYE AI</h1>
+    <p>Deriv Synthetic & Volatility Intelligence</p>
+  </div>
+
+  <div id="connection" class="status offline">
+    ● DISCONNECTED
+  </div>
+</header>
+
+<main>
+
+  <!-- ACCOUNT -->
+  <section class="card">
+    <h2>🔐 Deriv Account</h2>
+
+    <div class="mode-row">
+      <button id="demoMode" class="active">DEMO</button>
+      <button id="liveMode">LIVE</button>
+    </div>
+
+    <div class="fields">
+
+      <div>
+        <label>Account ID</label>
+        <input id="accountId" placeholder="Demo / Real Account ID">
+      </div>
+
+      <div>
+        <label>Deriv App ID</label>
+        <input id="appId" placeholder="Your Deriv App ID">
+      </div>
+
+      <div>
+        <label>Personal Access Token</label>
+        <input id="token" type="password"
+               placeholder="Enter only when connecting">
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button id="connectBtn" class="primary">
+        CONNECT DERIV
+      </button>
+
+      <button id="disconnectBtn">
+        DISCONNECT
+      </button>
+    </div>
+
+    <p class="warning">
+      🔒 Never put your private token directly into GitHub source code.
+    </p>
+  </section>
+
+
+  <!-- SCANNER -->
+  <section class="card">
+
+    <div class="section-title">
+      <div>
+        <h2>🔎 Best Market Scanner</h2>
+        <p>Continuously searches available Synthetic/Volatility markets.</p>
+      </div>
+
+      <span id="scannerStatus" class="badge">
+        STOPPED
+      </span>
+    </div>
+
+    <div class="fields">
+
+      <div>
+        <label>Market Group</label>
+        <select id="marketGroup">
+          <option value="synthetic">
+            All Synthetic / Volatility
+          </option>
+
+          <option value="volatility">
+            Volatility Indices
+          </option>
+
+          <option value="boomcrash">
+            Boom & Crash
+          </option>
+
+          <option value="range">
+            Range Break
+          </option>
+
+          <option value="all">
+            All Supported
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label>Analysis Timeframe</label>
+        <select id="timeframe">
+          <option value="1">1 Minute</option>
+          <option value="2">2 Minutes</option>
+          <option value="3">3 Minutes</option>
+          <option value="5">5 Minutes</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Expiry</label>
+        <select id="expiry">
+          <option value="1">1 Minute</option>
+          <option value="2">2 Minutes</option>
+          <option value="3">3 Minutes</option>
+          <option value="5">5 Minutes</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button id="startScanner" class="primary">
+        ▶ START SCANNER
+      </button>
+
+      <button id="stopScanner">
+        ■ STOP
+      </button>
+    </div>
+
+  </section>
+
+
+  <!-- BEST MARKET -->
+  <section class="card">
+
+    <h2>🏆 Best Current Market</h2>
+
+    <div class="best-market">
+
+      <div>
+        <span>MARKET</span>
+        <strong id="bestSymbol">WAITING...</strong>
+      </div>
+
+      <div>
+        <span>SCORE</span>
+        <strong id="bestScore">0/10</strong>
+      </div>
+
+      <div>
+        <span>CONFIDENCE</span>
+        <strong id="bestConfidence">0%</strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- AI DECISION -->
+  <section class="card">
+
+    <h2>🧠 AI Decision</h2>
+
+    <div id="signal" class="signal wait">
+      WAIT
+    </div>
+
+    <p id="signalReason">
+      The AI is waiting for enough confirmation.
+    </p>
+
+    <div class="metrics">
+
+      <div>
+        <small>Trend</small>
+        <b id="trend">WAIT</b>
+      </div>
+
+      <div>
+        <small>RSI 14</small>
+        <b id="rsi">—</b>
+      </div>
+
+      <div>
+        <small>EMA 20</small>
+        <b id="ema20">—</b>
+      </div>
+
+      <div>
+        <small>EMA 50</small>
+        <b id="ema50">—</b>
+      </div>
+
+      <div>
+        <small>MACD</small>
+        <b id="macd">—</b>
+      </div>
+
+      <div>
+        <small>Stochastic</small>
+        <b id="stochastic">—</b>
+      </div>
+
+      <div>
+        <small>Momentum</small>
+        <b id="momentum">—</b>
+      </div>
+
+      <div>
+        <small>Structure</small>
+        <b id="structure">—</b>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- LEVELS -->
+  <section class="card">
+
+    <h2>📐 Market Levels</h2>
+
+    <div class="levels">
+
+      <div>
+        <span>SUPPORT</span>
+        <strong id="support">—</strong>
+      </div>
+
+      <div>
+        <span>CURRENT PRICE</span>
+        <strong id="currentPrice">—</strong>
+      </div>
+
+      <div>
+        <span>RESISTANCE</span>
+        <strong id="resistance">—</strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TRADING -->
+  <section class="card">
+
+    <h2>⚡ Trade Control</h2>
+
+    <div class="fields">
+
+      <div>
+        <label>Stake</label>
+        <input id="stake"
+               type="number"
+               min="0.35"
+               step="0.01"
+               value="1">
+      </div>
+
+      <div>
+        <label>Maximum Trades</label>
+        <input id="maxTrades"
+               type="number"
+               min="1"
+               value="3">
+      </div>
+
+      <div>
+        <label>Maximum Consecutive Losses</label>
+        <input id="maxLosses"
+               type="number"
+               min="1"
+               value="2">
+      </div>
+
+    </div>
+
+    <div class="auto-row">
+
+      <span>Automatic Trading</span>
+
+      <button id="autoOff" class="active">
+        AUTO OFF
+      </button>
+
+      <button id="autoOn">
+        AUTO ON
+      </button>
+
+    </div>
+
+    <div class="trade-buttons">
+
+      <button id="callButton" class="call">
+        ▲ CALL
+      </button>
+
+      <button id="putButton" class="put">
+        ▼ PUT
+      </button>
+
+    </div>
+
+    <p class="warning">
+      Live trading remains OFF until you deliberately select LIVE,
+      connect the real account and enable trading.
+    </p>
+
+  </section>
+
+
+  <!-- ACCOUNT STATISTICS -->
+  <section class="card">
+
+    <h2>💰 Session Statistics</h2>
+
+    <div class="metrics">
+
+      <div>
+        <small>Balance</small>
+        <b id="balance">—</b>
+      </div>
+
+      <div>
+        <small>Trades</small>
+        <b id="tradeCount">0</b>
+      </div>
+
+      <div>
+        <small>Wins</small>
+        <b id="wins">0</b>
+      </div>
+
+      <div>
+        <small>Losses</small>
+        <b id="losses">0</b>
+      </div>
+
+      <div>
+        <small>Win Rate</small>
+        <b id="winRate">0%</b>
+      </div>
+
+      <div>
+        <small>Session P/L</small>
+        <b id="profit">0.00</b>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- SIGNAL HISTORY -->
+  <section class="card">
+
+    <h2>📡 Signal History</h2>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Market</th>
+            <th>Signal</th>
+            <th>Score</th>
+            <th>Confidence</th>
+          </tr>
+        </thead>
+
+        <tbody id="signalHistory">
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <!-- ENGINE LOG -->
+  <section class="card">
+
+    <h2>🛠 Engine Log</h2>
+
+    <div id="engineLog" class="log">
+      Ozilika Eye AI starting...
+    </div>
+
+  </section>
+
+
+  <section class="card footer-warning">
+
+    <strong>⚠️ Risk Warning</strong>
+
+    <p>
+      Ozilika Eye AI is an analysis and trading tool.
+      No indicator, scanner or AI system can guarantee profitable trades.
+      Binary/options trading can result in loss of the stake.
+      Always test the complete system on Demo before using real money.
+    </p>
+
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+
+</body>
+    </html>
